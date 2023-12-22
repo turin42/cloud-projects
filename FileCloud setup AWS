@@ -1,0 +1,102 @@
+# How to set up a FileCloud instance in AWS and connect to S3 bucket.
+
+# Set up AWS account if you don't have one set up already.
+# Go to https://ce.filcloud.com to set up a Community Edition account for free.
+# Click on Download Now at the bottom of the page to create an account.
+
+# Once account is created, click on Download Now then Download.
+# List of options are seen, click AWS to load the guide.
+
+# Log into your AWS account, and navigate to the EC2 option.
+# Click Launch Instance, and name your instance.  
+
+# Search for FileCloud under the AMI field, then click on the AWS Marketplace AMIs tab.  Select the first option in list.
+
+# Under Instance type, leave default selection of t2.medium (which works better) or select another type such as the free tier t2.micro (which doesn't work so well).
+
+# Under Key pair login, generate new key pair if you don't already have one available.
+
+# Once everything is configured, click Launch Instance. Will take a few minutes before it is running.
+
+# Click on the Instance ID, and once it is in the Running state scroll over to the Public IPv4 DNS column and copy the URL, then paste into a browser.  
+
+# Type in /install following URL that was pasted to bring up Install check page to ensure everything was installed correctly.
+
+# Now you need to set up an IAM user account.  In the search field type in "IAM" and hit enter.  Click on IAM.
+
+# Click on Users in left hand column.  On right hand side click on Add Users.  Type in user name and hit Next.
+# Keep default settings and click Create User.  Once user is created, find user in list of users and click on it.  Find the Permissions policies section.
+# Click Add Permissions, then Create Inline Policy.
+
+# Go back to FileCloud site and find the AWS Guide from the start.  Expand the Post-Installation option at the bottom and find the link "Setting Up FileCloud Managed S3 Storage".
+# Click on option 2 Configure Credentials.  Under S3 Key, click on following permissions link.  This will bring JSON file.  Copy this file:
+
+{
+
+          "Version": "2012-10-17",
+
+          "Statement": [
+
+                            {
+
+                               "Effect": "Allow",
+
+                               "Action": [
+
+                                     "s3:CreateBucket",
+
+                                     "s3:DeleteObject",
+
+                                     "s3:GetObject",
+
+                                     "s3:ListBucket",
+
+                                     "s3:PutObject"
+
+                               ],
+
+                                "Resource": [
+
+                                     "arn:aws:s3:::*"
+
+                              ]
+
+                          }
+
+                      ]
+
+}
+
+# Paste this JSON file back in AWS under the Create Inline Policy page.  Click on JSON tab and paste.  Click on Review Policy and give it a name before creating it.
+
+# Now the IAM user has permissions to access the S3 bucket.  To configure S3 storage in FileCloud, go back to the Instance page in AWS and click on the filecloud instance running.
+
+# Click Connect.  Find the ssh command on the page and copy it.  Open a CLI (Powershell, Command Prompt, etc.)  and change directories to one that the key pair is saved in.
+
+# Now paste the ssh command into the CLI and connect to Instance, which is running Ubuntu.  
+
+# At the command prompt, type in the following command:
+
+sudo nano /var/www/html/config/cloudconfig.php
+
+# This launch the file in the nano text editor.  You will now scroll down to the line that says "define(TONIDOCLOUD_STORAGE_IMPLEMENTATION", "local");".  Delete "local" and insert "amazons3".
+# Hit Ctrl-x, y, enter to save file.  
+
+# Back in the CLI, you will need to copy a file.  Type in the following command:
+
+sudo cp /var/html/config/amazons3storageconfig-sample.php /var/www/html/config/amazons3storageconfig.php
+
+# Go back to Storage settings in FileCloud admin portal, and S3 storage settings should be present on screen.  If not refresh page.  
+
+# Now go back to IAM user settings for the user you created and click on the Security credentials tab.  Click on Create Access Key.  Click on Third-party service radio button and hit Next.
+
+# Type in a description in for the tag value in field and hit Create access key.
+
+# On the next page copy Access Key and go back to FileCloud portal and paste into the S3 Key field.  Then grab the Secret access key and paste into the S3 Secret field.  
+# Type in the name of the S3 bucket you created already.  Everything else is optional.  Click on Save S3 Settings then click Ok on Success dialog box. 
+
+# To test this out, click on Users in the FileCloud portal to create a new user.  Fill out information in dialog box.  
+# Copy URL for the FileCloud instance and open in new Incognito window.  Sign into FileCloud.  Upload any file to the account. Go back to AWS and make sure there is an object in the S3 bucket.
+
+# To enable enryption for your data, go back to admin portal and click on Manage encryption in Storage settings and complete configuration options.
+
