@@ -48,3 +48,38 @@
 
 # Go to your Sharepoint site and create a new item in your new employee list.  Make sure to add all the necessary entries required for the Create User 
 # configuration, such as User Principal Name, etc.
+
+# Now go back to the Logic app designer and ensure that all actions and trigger passed.  If not, check the error and troubleshoot from there. 
+# Check to make all fields have correct dynamic content in action.
+
+# Now that the workflow of creating the user in Entra Id has been tested and verified, proceed to the next action, which is adding a user
+# to a group in Entra ID.
+
+# Before adding a user to a group, create the next action which is Get User with the Entra Id connector.
+
+# Under the User id/Principal field, choose the ID dynamic content option from the Create User action.
+
+# Save your progress, and go to the Entra Id portal.  Select groups, and choose the group that you want to add new users to.
+
+# For this project, a new Microsoft 365 group was created when setting up the site on Sharepoint.  I chose this group since it is a
+# Microsoft 365 and not a Security group, which I could not get to work because of permissions being denied.
+
+# Copy the Object Id of the group you select, and then go back to the Logic app designer in your Logic app.
+
+# Create the next action, which is Get Group.  Paste the Group Id into the field.
+ 
+# Click on "+New Step"  and select the Microsoft Entra ID connector.  Choose the "Add user to group" option.  
+
+# Now in the configuration, choose the Id option for the Group Id from the Get Group action.  Choose the Id option from the Get User 
+# action in the User Id field.
+
+# Once these actions are configured, save your progress and run the trigger again.  
+
+# Go back to the Sharepoint site, and create a new user in the list like before.  Once created, go back to the Logic Apps designer.
+# If all actions passed then the user you just created should be in Entra ID and assigned to the group you selected.  
+
+# The main issue I had with this project was figuring out the add user to group action.  I had chosen 2 different Security groups to add users
+# to, but could get the action to succeed because of getting denied permissions errors.  I can only attribute this to the fact 
+# the groups being Security groups without mail enablement being the reason.  Further testing is needed to see if a mail-enabled Security group
+# would work.  They were also Dynamically assigned instead of static assigned, which may have been another reason.  Further testing is required to 
+# see if this makes a difference.
