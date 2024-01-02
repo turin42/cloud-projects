@@ -1,0 +1,50 @@
+# Designed Logic App in Azure to onboard new hires into Entra ID and assign them into New Employee group using a trigger from
+# adding a new employee entry into a list in Sharepoint.
+
+# To create this Logic App, you will need access to a Sharepoint site and an Azure subscription, as well as an Entra ID P1
+# or P2 license.  
+
+# In Sharepoint, create a new site to host the new employee list.  Once set up create a new list to add new employees to.
+
+# Before you create the app, create a new resource group in Azure for the app or you can use an existing one.
+
+# In the Azure portal, search for Logic apps and select the Logic Apps icon.  
+
+# Select "+ Add", and select the subscription you want to use and a resource group for the app.  Give the app a name and select a region.
+
+# Under Plan type, choose between Standard and Consumption.  The cheapest plan is Consumption, which is a pay-as-you-go type of plan
+# and only charges for when your workflow runs.
+
+# Under Zone redundancy, choose to either enable or disable this feature.
+
+# If the Consumption plan was chosen, either add Tags or Review+Create to finish creating the app.  If the Standard Plan was chosen, then
+# more options such as Hosting to a storage account will have to be configured.
+
+# Once the app is created, click on Go to Resource.  On the left hand pane, select Logic App designer under Development tools.
+
+# You can choose from a selection of predefined Templates or create your own.  For this project, it is easiest to create your own.
+# Choose the Blank app option.
+
+# First you will need to configure a Trigger event for the workflow.  Search for the Sharepoint connector, and select
+# the "When an item is created or modified" option for the trigger after sigining into your Sharepoint account.
+
+# Under the configuration settings for the trigger, enter the Site Address for the Sharepoint site that hosts the list for new employees you created.
+# Enter the name of the list you created for the site.
+
+# Configure how often the trigger needs to check for the item.  Optionally you can additional parameters such as Start time to check for the item.
+
+# Once the trigger is set up, add the Next Step which will be the first Action.  Search for Microsoft Entra Id.
+
+# Select the Entra ID connector.  The first action will be to create a user in Entra Id from the newly added employee to the Sharepoint list.
+# Select the Create User option.
+
+# The configuration of this action depends on the way the list you created in Sharepoint is set up.  You can create/modify columns in the list to 
+# reflect the fields required in the action configuration.  Once you have the list set up to match the configuration, add dynamic content 
+# from the right hand menu to fulfill the required input in the configuration.
+
+# Once you have the dynamic content options configured for the action, save your progress.  
+
+# To make sure this action works, before proceeding to the next action go ahead and select Run Trigger to test the workflow of creating a user.
+
+# Go to your Sharepoint site and create a new item in your new employee list.  Make sure to add all the necessary entries required for the Create User 
+# configuration, such as User Principal Name, etc.
